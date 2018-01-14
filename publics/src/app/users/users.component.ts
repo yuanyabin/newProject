@@ -15,6 +15,9 @@ import 'rxjs/Rx';
 export class UsersComponent implements OnInit, OnDestroy {
   private users: Array<User> = [];
   mySubscription: Subscription = new Subscription();
+  private searchValue: string;
+  private searchResult: Array<User> = [];
+  private searchResultShow: Array<User> = [];
 
   constructor(
     private _router: Router,
@@ -26,6 +29,14 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.getUsers();
   }
 
+  onClickItem() {
+    if (!this.searchValue) {
+      this.searchResult = [];
+    }else {
+      return;
+    }
+  }
+
   getUsers() {
     this._userService.getUsers().subscribe(
       response => {
@@ -35,6 +46,16 @@ export class UsersComponent implements OnInit, OnDestroy {
         });
       }
     );
+  }
+
+  search() {
+    const _this = this;
+    this.searchResult = [];
+    this.users.forEach(function(value, index, array) {
+      if (value.first_name.toLowerCase() === _this.searchValue.toLowerCase()) {
+        _this.searchResult.push(array[index]);
+      }
+    });
   }
 
   create() {
