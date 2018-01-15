@@ -13,6 +13,8 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { GverifyComponent } from './login/gverify/gverify.component';
+import { HttpClient } from './shared/custom-http.service';
 
 
 @NgModule({
@@ -21,7 +23,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     UsersComponent,
     UserformComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    GverifyComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     BrowserAnimationsModule,
     NgZorroAntdModule.forRoot()
   ],
-  providers: [UserService],
+  providers: [UserService, HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

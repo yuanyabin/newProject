@@ -30,7 +30,8 @@ export class UserformComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       first_name: [this._userService.currentTargetUser ? this._userService.currentTargetUser.first_name : ''],
       last_name: [this._userService.currentTargetUser ? this._userService.currentTargetUser.last_name : ''],
-      email: [this._userService.currentTargetUser ? this._userService.currentTargetUser.email : '']
+      email: [this._userService.currentTargetUser ? this._userService.currentTargetUser.email : ''],
+      password: ['']
     });
   }
 

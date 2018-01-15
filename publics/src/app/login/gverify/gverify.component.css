@@ -1,0 +1,18 @@
+canvas {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+label {
+    height: 34px;
+    display: block;
+    cursor: pointer;
+    width: 30%;
+    line-height: 30px;
+}
+
+#v_container, nz-input {
+    width: 30%;
+    margin-right:5%;
+}

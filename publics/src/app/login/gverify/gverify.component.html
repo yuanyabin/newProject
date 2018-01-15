@@ -1,0 +1,7 @@
+<nz-input-group [nzSize]="'large'" nzCompact>
+  <nz-input [nzPlaceHolder]="'验证码'" [nzSize]="'large'" [(ngModel)] = 'VerifiCode'></nz-input>
+  <div #gverify id="v_container"><canvas #myCanvas>您的浏览器不支持canvas</canvas></div>
+  <label (click)="refreshCode()">看不清，换一张</label>
+</nz-input-group>
+<div nz-form-explain *ngIf="inValidNull | async">请输入验证码</div>
+<div nz-form-explain *ngIf="inValidError | async">验证码输入错误，请重新尝试。</div>

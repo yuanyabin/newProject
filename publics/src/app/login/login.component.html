@@ -1,4 +1,4 @@
-<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="_submitForm()">
+<form nz-form [formGroup]="validateForm" class="login-form">
   <div nz-form-item>
     <div nz-form-control>
       <nz-input formControlName="userName" [nzPlaceHolder]="'Username'" [nzSize]="'large'">
@@ -20,13 +20,15 @@
     </div>
   </div>
   <div nz-form-item>
+    <app-gverify></app-gverify>
+  </div>
+  <div nz-form-item>
     <div nz-form-control>
-      <label nz-checkbox formControlName="remember">
+      <label nz-checkbox>
         <span>Remember me</span>
       </label>
       <a class="login-form-forgot" class="login-form-forgot">Forgot password</a>
-      <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'">Log in</button>
-      <button nz-button class="login-form-button" [nzType]="'default'" [nzSize]="'large'">sign up</button>
+      <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitData()">Log in</button>
     </div>
   </div>
 </form>`
