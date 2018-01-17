@@ -34,7 +34,7 @@ app.use(morgan('dev'))
 // Mongo Database
 let mongoose = require('mongoose')
 // mongodb://mbdbk:nopass@ds249737.mlab.com:49737/kxdb
-mongoose.connect('mongodb://123.57.54.112:27017', {useMongoClient: true}, function (err, db) {
+mongoose.connect('mongodb://mbdbk:nopass@ds249737.mlab.com:49737/kxdb', {useMongoClient: true}, function (err, db) {
   if(!err) {
     User.findOne({first_name: 'admin'}, (err, user) => {
       if(!err && !user) {
