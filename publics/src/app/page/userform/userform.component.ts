@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { User } from '../model/user';
+import { User } from '../../model/user';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService } from '../service/user.service';
+import { UserService } from '../../service/user.service';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
+import { LogOutService } from '../page.service';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class UserformComponent implements OnInit, OnDestroy {
     private _routerInfo: ActivatedRoute,
     private _router: Router,
     private _userService: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) { }
 
   ngOnInit() {
@@ -36,7 +37,7 @@ export class UserformComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this._router.navigateByUrl('/users');
+    this._router.navigateByUrl('/page/users');
   }
 
   save() {
@@ -44,7 +45,7 @@ export class UserformComponent implements OnInit, OnDestroy {
       this._userService.create(this.form.value).subscribe(
         response => {
           if (JSON.stringify(response.success) === 'true') {
-            this._router.navigateByUrl('/users');
+            this._router.navigateByUrl('/page/users');
           }
         }
       )
@@ -58,8 +59,8 @@ export class UserformComponent implements OnInit, OnDestroy {
         first_name: this.form.value.first_name,
         last_name: this.form.value.last_name,
         email: this.form.value.email
-      }).subscribe(response => {if (JSON.stringify(response) === 'true') {
-        this._router.navigateByUrl('/users');
+      }).subscribe(response => {if (JSON.stringify(response.success) === 'true') {
+        this._router.navigateByUrl('/page/users');
       }})
     );
   }

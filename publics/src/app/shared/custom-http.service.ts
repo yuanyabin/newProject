@@ -13,7 +13,7 @@ export class HttpClient {
             const token = JSON.parse(localStorage.getItem('currentUser')).token;
 
             if (token) {
-                headers.append('X-Auth-Token', token);
+                headers.append('Authorization', token);
             }else {
                 this._router.navigateByUrl('/login');
             }

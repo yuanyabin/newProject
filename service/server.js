@@ -33,30 +33,40 @@ app.use(morgan('dev'))
 
 // Mongo Database
 let mongoose = require('mongoose')
-
-mongoose.connect('mongodb://mbdbk:nopass@ds249737.mlab.com:49737/kxdb', {useMongoClient: true}, function (err, db) {
-  console.log('connect mlab ok...')
+// mongodb://mbdbk:nopass@ds249737.mlab.com:49737/kxdb
+mongoose.connect('mongodb://123.57.54.112:27017', {useMongoClient: true}, function (err, db) {
+  if(!err) {
+    User.findOne({first_name: 'admin'}, (err, user) => {
+      if(!err && !user) {
+        User.create({first_name: 'admin', last_name: 'admin', password: 'admin', email: 'admin@123.com'}, (err, user) => {
+          if(!err) {
+            console.log('成功创建了admin用户');
+          }
+        })
+      }
+      if(!err) {
+        console.log('连接数据库成功');
+      }
+    })
+  }
 })
 
-app.get('/api/users', (req, res, next) => {
-  console.log("Server > GET '/users' ")
+app.get('/api/users',passport.authenticate('bearer', { session: false }), (req, res, next) => {
   User.find({}, (err, users) => {
     return res.json(users)
   })
 })
 
 // Get User
-app.get('/api/users', (req, res, next) => {
-  console.log("Server > GET '/users/:id' ")
-  User.findOne({_id: req.body.id}, (err, users) => {
-    return res.json(users)
-  })
-})
+// app.get('/api/users', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+//   User.findOne({_id: req.body.id}, (err, users) => {
+//     return res.json(users)
+//   })
+// })
 
 // Create User
-app.post('/api/users', (req, res) => {
+app.post('/api/users',passport.authenticate('bearer', { session: false }), (req, res) => {
   User.findOne({first_name: req.body.first_name}, (err, user) => {
-    console.log('aaa');
     if(err) {
       throw err;
     }
@@ -93,14 +103,18 @@ app.post('/api/login', (req, res) => {
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
           let token = jwt.sign({name: user.name}, config.secret, {
-            expiresIn: 5000 // token到期时间
+            expiresIn: 5000 // token到期时间5000秒，过期之后执行数据操作会返回到登录页面
           })
           user.token = token
-          User.update(user)
+          user.save(function(err) {
+            if (err) {
+              res.send(err);
+            }
+          });
           res.json({
             success: true,
             massage: '验证通过',
-            token: token,
+            token: 'Bearer '+token,
             name: user.first_name
           })
         }else {
@@ -109,21 +123,42 @@ app.post('/api/login', (req, res) => {
       })
     }
   })
+});
+
+// 登出
+app.post('/api/logout',(req, rex) => {
+  User.findOne({first_name: req.body.userName}), (err, user) => {
+    if(user && user.token) {
+      user.token = null;
+    }
+  }
 })
 
 // Destroy User
-app.post('/api/delete/users', (req, res, next) => {
-  // console.log("Server > DELETE '/users/:id' > id ", req.params.id)
+app.post('/api/delete/users', passport.authenticate('bearer', { session: false }) ,(req, res, next) => {
   User.remove({ _id: req.body.id }, (err, rawData) => {
     if (err) {return res.json(err)}else {return res.json(true)}
   })
 })
-app.put('/api/users', (req, res, next) => {
-  //   console.log("Server > PUT '/users/:id' > id ", req.params.id)
-  //   console.log("Server > PUT '/users/:id' > user ", req.body)
-  User.update({ _id: req.body._id }, {$set: {first_name: req.body.first_name, last_name: req.body.last_name, email: req.body.email}}, (err, rawData) => {
-    if (err) {return res.json(err)} else {return res.json(true)}
-  })
+
+app.put('/api/users', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+    User.findOne({_id: req.body._id},(err, user) => {
+      if(user) {
+        if(user.first_name != req.body.first_name && user.token) {
+          user.token = null;
+        }
+        user.first_name = req.body.first_name,
+        user.last_name = req.body.last_name,
+        user.email = req.body.email,
+        user.save(function(err){
+          if(err) {
+            res.send(err);
+          }
+          res.send({success: true});
+        })
+      }
+    }
+)
 })
 
 // Server Listening @ 1337

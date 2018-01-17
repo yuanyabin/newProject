@@ -16,3 +16,11 @@ label {
     width: 30%;
     margin-right:5%;
 }
+
+.redWord {
+    color: #f04134;
+}
+
+.redBorder input {
+    color: #f04134;
+}

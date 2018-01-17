@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../service/user.service';
@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   validateForm: FormGroup;
   @ViewChild(GverifyComponent) child: GverifyComponent;
 
-  constructor(private fb: FormBuilder, private _userService: UserService, private _router: Router) { }
+  constructor(private fb: FormBuilder, private _userService: UserService, private _router: Router, private cdref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.validateForm = this.fb.group({
@@ -23,20 +23,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+  }
+
   submitData() {
     let codeReust = false;
-    if  (this.child.VerifiCode) {
+    if (this.child.VerifiCode) {
       codeReust = this.child.getGaverifyService.validate(this.child.VerifiCode);
     }
 
-    if (codeReust) {
+    if (this.validateForm.valid && codeReust) {
       this.child.inValidError = false;
       this.child.inValidNull = true;
       this._userService.login(this.validateForm.value).subscribe(
         response => {
           if (JSON.stringify(response.success) === 'true') {
             localStorage.setItem('currentUser', JSON.stringify({ userName: response.name, token: response.token }));
-            this._router.navigateByUrl('/users');
+            this._router.navigateByUrl('/page/users');
           }
         }
       );
@@ -47,13 +51,9 @@ export class LoginComponent implements OnInit {
       }
       if (this.child.VerifiCode && !codeReust) {
         this.child.inValidError = true;
-        if (this.child.inValidNull) {
-          this.child.inValidNull = false;
-        }
-      }else if (!this.child.VerifiCode) {
-        if (this.child.inValidError) {
-          this.child.inValidError = false;
-        }
+        this.child.inValidNull = false;
+      } else if (!this.child.VerifiCode) {
+        this.child.inValidError = false;
         this.child.inValidNull = true;
         this.child.getGaverifyService.refresh();
       }

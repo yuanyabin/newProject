@@ -6,5 +6,6 @@ export class User {
         public email: string = '',
         public password?: string,
         public index?: number,
+        public token?: any
     ) { }
 }

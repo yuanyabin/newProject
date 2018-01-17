@@ -5,8 +5,6 @@ import { HttpModule } from '@angular/http';
 import {HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { UsersComponent } from './users/users.component';
-import { UserformComponent } from './userform/userform.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { UserService } from './service/user.service';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
@@ -15,13 +13,12 @@ import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { GverifyComponent } from './login/gverify/gverify.component';
 import { HttpClient } from './shared/custom-http.service';
+import { PageModule } from './page/page.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersComponent,
-    UserformComponent,
     LoginComponent,
     PageNotFoundComponent,
     GverifyComponent
@@ -34,6 +31,7 @@ import { HttpClient } from './shared/custom-http.service';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    PageModule,
     NgZorroAntdModule.forRoot()
   ],
   providers: [UserService, HttpClient],

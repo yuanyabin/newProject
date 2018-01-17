@@ -35,7 +35,6 @@ UserSchema.pre('save', function(next) {
 
 // 校验用户输入密码是否正确
 UserSchema.methods.comparePassword = function(passw, cb) {
-    console.log(passw+'-----'+this.password)
     bcrypt.compare(passw, this.password, (err, isMatch) => {
         if (err) {
             return cb(err);

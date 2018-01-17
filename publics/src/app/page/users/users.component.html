@@ -35,7 +35,8 @@
           <td nz-td>{{ data.first_name }}</td>
           <td nz-td>{{ data.last_name }}</td>
           <td nz-td>{{ data.email }}</td>
-          <td nz-td>
+          <!-- 下面这里主要防止admin被删除或修改 -->
+          <td nz-td *ngIf="data.first_name !== 'admin'">
             <a class="btn btn-primary btn-xs" (click)="update(data)">
               <span class="glyphicon glyphicon-pencil"></span>EDIT</a>
             <a class="btn btn-danger btn-xs" (click)="destroy(data)">

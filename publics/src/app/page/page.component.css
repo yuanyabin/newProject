@@ -1,0 +1,9 @@
+.Current {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.Current > label {
+    margin: 0 10px;
+}

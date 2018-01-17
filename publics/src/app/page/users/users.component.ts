@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { User } from '../model/user';
-import { UserService } from '../service/user.service';
+import { User } from '../../model/user';
+import { UserService } from '../../service/user.service';
 import { Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
+import { LogOutService } from '../page.service';
 
 import 'rxjs';
 import 'rxjs/Rx';
@@ -21,7 +22,8 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private _router: Router,
-    private _userService: UserService) {
+    private _userService: UserService,
+    private _LogOutService: LogOutService) {
 
   }
 
@@ -40,10 +42,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   getUsers() {
     this._userService.getUsers().subscribe(
       response => {
-        this.users = response;
-        this.users.forEach(function(value, index, array) {
-          array[index].index = index + 1;
-        });
+        if (response && typeof(response) === 'object') {
+          this.users = response;
+          this.users.forEach(function(value, index, array) {
+            array[index].index = index + 1;
+          });
+        }
       }
     );
   }
@@ -51,16 +55,18 @@ export class UsersComponent implements OnInit, OnDestroy {
   search() {
     const _this = this;
     this.searchResult = [];
-    this.users.forEach(function(value, index, array) {
-      if (value.first_name.toLowerCase() === _this.searchValue.toLowerCase()) {
-        _this.searchResult.push(array[index]);
-      }
-    });
+    if (_this.users) {
+      _this.users.forEach(function(value, index, array) {
+        if (value.first_name.toLowerCase() === _this.searchValue.toLowerCase()) {
+          _this.searchResult.push(array[index]);
+        }
+      });
+    }
   }
 
   create() {
     this._userService.currentTargetUser = '';
-    this._router.navigateByUrl('/users/0');
+    this._router.navigateByUrl('/page/users/0');
   }
 
   destroy(user: User) {
@@ -75,7 +81,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   update(user: User) {
       this._userService.currentTargetUser = user;
-      this._router.navigateByUrl('/users/' + user._id);
+      this._router.navigateByUrl('/page/users/' + user._id);
   }
 
   ngOnDestroy() {
