@@ -44,10 +44,9 @@ mongoose.connect('mongodb://mbdbk:nopass@ds249737.mlab.com:49737/kxdb', {useMong
           }
         })
       }
-      if(!err) {
-        console.log('连接数据库成功');
-      }
     })
+  }else {
+    console.log('连接数据库失败');
   }
 })
 
